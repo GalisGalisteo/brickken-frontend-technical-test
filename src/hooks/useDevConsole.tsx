@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Web3Provider } from '@ethersproject/providers';
-import { useWeb3ModalProvider } from '@web3modal/ethers5/react';
 import { bknAddress, DECIMALS } from '../services/constants';
 import { Contract } from 'ethers';
 import ERC20 from '../assets/abi/ERC20.json';
 import { parseUnits } from 'ethers/lib/utils';
+import { useEthersProvider } from './useEthersProvider';
 
 export const useDevConsole = () => {
   // TODO: Refactor the code to extract ethersProvider into a hook for reuse in StakingInfo.tsx and useDevConsole.tsx files.
   window.bknApi = {};
-  const { walletProvider } = useWeb3ModalProvider();
-  const [ethersProvider, setEthersProvider] = useState<Web3Provider>();
+
+  const ethersProvider = useEthersProvider();
+
   window.bknApi.giveMeMoreBknPapi = async (amount: string) => {
     try {
       if (!ethersProvider) {
@@ -26,9 +25,4 @@ export const useDevConsole = () => {
       console.log(error);
     }
   };
-  useEffect(() => {
-    if (walletProvider) {
-      setEthersProvider(new Web3Provider(walletProvider));
-    }
-  }, [walletProvider]);
 };

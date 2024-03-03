@@ -22,4 +22,4 @@ as indicated in the `TODO` comment in the `App.tsx` file.
 
 ## Story Point Estimate
 
-<!-- Here is where you can add your Story Points estimate -->
+1
