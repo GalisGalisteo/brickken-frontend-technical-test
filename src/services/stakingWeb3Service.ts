@@ -15,7 +15,10 @@ export const getBknBalanceOf = async (signer: Signer): Promise<string> => {
   return formatUnits(balanceOf, bknDecimals);
 };
 
-export const fetchStakingBknInfo = async (ethersProvider: Web3Provider): Promise<StakingInfo> => {
+export const fetchStakingBknInfo = async (ethersProvider: Web3Provider | null): Promise<StakingInfo> => {
+  if (!ethersProvider) {
+    throw new Error('Ethers Provider not found');
+  }
   const signer = ethersProvider.getSigner();
   const address = await signer.getAddress();
   const stakingContract = new Contract(stakingContractAddress, stakingBknContractAbi.abi, signer);

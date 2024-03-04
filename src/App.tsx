@@ -7,6 +7,7 @@ import { StakingInfo } from './components/StakingInfoView/StakingInfoView';
 import { useDevConsole } from './hooks/useDevConsole';
 import { projectId } from './services/constants';
 import { Sepolia, sepolia } from './config/config';
+import { TestFetch } from './components/TestFetch';
 // TODO: Refactor the code to adhere to clean code principles.
 // 1. Extract the initialization of Web3Modal into a separate function.
 // 2. Move the projectId and sepolia constants into a separate configuration file.
@@ -48,6 +49,7 @@ export const App = () => {
           <ConnectButton />
         </p>
         <StakingInfo />
+        <TestFetch />
       </header>
     </div>
   );
