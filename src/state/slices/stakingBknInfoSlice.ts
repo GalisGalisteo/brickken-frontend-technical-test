@@ -59,7 +59,7 @@ const stakingBknInfoSlice = createSlice({
 
 export const fetchStakingBknInfoAsync = createAsyncThunk(
   'stakingBknInfoSlice/fetchStakingBknInfoAsync',
-  async (ethersProvider: Web3Provider | null) => await fetchStakingBknInfo(ethersProvider)
+  async (ethersProvider: Web3Provider) => await fetchStakingBknInfo(ethersProvider)
 );
 
 export default stakingBknInfoSlice.reducer;
