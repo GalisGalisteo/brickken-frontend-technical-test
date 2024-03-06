@@ -19,13 +19,18 @@ export const StakingInfoComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (!address) {
-      dispatch(resetStakingBknInfo());
-    } else if (ethersProvider) {
-      dispatch(fetchStakingBknInfoAsync(ethersProvider));
-      const network = ethersProvider?.network;
-      network && setNetworkName(network.name);
-    }
+    const fetchData = async () => {
+      if (ethersProvider && address) {
+        await dispatch(fetchStakingBknInfoAsync(ethersProvider));
+        const network = ethersProvider?.network;
+        network && setNetworkName(network.name);
+      } else {
+        dispatch(resetStakingBknInfo());
+        setNetworkName(null);
+      }
+    };
+
+    fetchData();
   }, [address, ethersProvider, dispatch]);
 
   const {
