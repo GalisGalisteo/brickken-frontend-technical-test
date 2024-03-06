@@ -5,7 +5,6 @@ import { parseUnits } from 'ethers/lib/utils';
 import { useEthersProvider } from './useEthersProvider';
 
 export const useDevConsole = () => {
-  // TODO: Refactor the code to extract ethersProvider into a hook for reuse in StakingInfo.tsx and useDevConsole.tsx files.
   window.bknApi = {};
 
   const ethersProvider = useEthersProvider();

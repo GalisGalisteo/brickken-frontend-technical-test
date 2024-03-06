@@ -4,11 +4,11 @@ import { useWeb3ModalAccount } from '@web3modal/ethers5/react';
 import { useEthersProvider } from '../../hooks/useEthersProvider';
 import { Box, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import { HeaderComponent } from '../HeaderComponent/HeaderComponent';
+import { AccountInformation } from '../AccountInformation/AccountInformation';
+import { StackingInformation } from '../StackingInformation/StackingInformation';
 import { AppDispatch, RootState } from '../../state/store/store';
 import { fetchStakingBknInfoAsync } from '../../state/slices/stakingBknInfoSlice';
 import { theme } from '../../config/palette';
-import { AccountInformation } from '../AccountInformation/AccountInformation';
-import { StackingInformation } from '../StackingInformation/StackingInformation';
 import { resetStakingBknInfo } from '../../state/slices/stakingBknInfoSlice';
 
 export const StakingInfoComponent = () => {
@@ -47,7 +47,7 @@ export const StakingInfoComponent = () => {
     withdrawableUserBalance
   } = useSelector((state: RootState) => state.stakingBknInfo);
 
-  console.log(chainId, isConnected, isDepositable, isClaimable);
+  console.log(chainId, isConnected, isClaimable);
 
   return (
     <div>
@@ -90,7 +90,12 @@ export const StakingInfoComponent = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <StackingInformation roi={roi} roiSeconds={roiSeconds} />
+                <StackingInformation
+                  roi={roi}
+                  roiSeconds={roiSeconds}
+                  bknAmount={bknAmount}
+                  isDepositable={isDepositable}
+                />
               </Grid>
             </Grid>
           </Container>
