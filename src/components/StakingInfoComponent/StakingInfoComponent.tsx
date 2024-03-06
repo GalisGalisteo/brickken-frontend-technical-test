@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { AppDispatch, RootState } from '../../state/store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStakingBknInfoAsync } from '../../state/slices/stakingBknInfoSlice';
-import { useEthersProvider } from '../../hooks/useEthersProvider';
 import { useWeb3ModalAccount } from '@web3modal/ethers5/react';
+import { useEthersProvider } from '../../hooks/useEthersProvider';
+import { Box, CircularProgress, Container, Grid, Typography } from '@mui/material';
+import { HeaderComponent } from '../HeaderComponent/HeaderComponent';
+import { AppDispatch, RootState } from '../../state/store/store';
+import { fetchStakingBknInfoAsync } from '../../state/slices/stakingBknInfoSlice';
+import { theme } from '../../config/palette';
+import { AccountInformation } from '../AccountInformation/AccountInformation';
+import { StackingInformation } from '../StackingInformation/StackingInformation';
+import { resetStakingBknInfo } from '../../state/slices/stakingBknInfoSlice';
 
 export const StakingInfoComponent = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
+
   const [networkName, setNetworkName] = useState<string | null>(null);
   const ethersProvider = useEthersProvider();
   const dispatch = useDispatch<AppDispatch>();
 
-  const fetchNetwork = async () => {
-    try {
-      const network = await ethersProvider?.getNetwork();
-      network ? setNetworkName(network.name) : setNetworkName(null);
-    } catch (error) {
-      console.error('Error fetching network:', error);
-    }
-  };
-
   useEffect(() => {
-    ethersProvider && dispatch(fetchStakingBknInfoAsync(ethersProvider));
-    fetchNetwork();
-  }, [address]);
+    if (!address) {
+      dispatch(resetStakingBknInfo());
+    } else if (ethersProvider) {
+      dispatch(fetchStakingBknInfoAsync(ethersProvider));
+      const network = ethersProvider?.network;
+      network && setNetworkName(network.name);
+    }
+  }, [address, ethersProvider, dispatch]);
 
   const {
     loading,
@@ -39,39 +42,53 @@ export const StakingInfoComponent = () => {
     withdrawableUserBalance
   } = useSelector((state: RootState) => state.stakingBknInfo);
 
+  console.log(chainId, isConnected, isDepositable, isClaimable);
+
   return (
     <div>
-      {/* Header */}
-      {/* Amounts Left */}
-      {/* Staking Info Right */}
+      <HeaderComponent network={networkName} userAddress={address} bknAmount={bknAmount} />
       {error && (
         <div>
           <p>Error: {error}</p>
         </div>
       )}
       {loading ? (
-        <div>
-          <p>Loading...</p>
-        </div>
+        <Box
+          alignItems={'center'}
+          color={theme.palette.info.main}
+          display={'flex'}
+          height={'100vh'}
+          justifyContent={'center'}
+        >
+          <CircularProgress size={100} />
+        </Box>
       ) : (
         <div>
-          <div className="rounded-lg bg-emerald-800">
-            <p>BKN Amount: {bknAmount}</p>
-            <p>Projected Amount: {projectedAmount}</p>
-            <p>Deposited Amount: {depositedAmount}</p>
-            <p>Is User Staker: {isUserStaker ? 'Yes' : 'No'}</p>
-            <p>ROI: {roi}</p>
-            <p>ROI Seconds: {roiSeconds}</p>
-            <p>Is Depositable: {isDepositable ? 'Yes' : 'No'}</p>
-            <p>Is Claimable: {isClaimable ? 'Yes' : 'No'}</p>
-            <p>Withdrawable User Balance: {withdrawableUserBalance}</p>
-          </div>
-          <div>
-            <div>{isConnected ? 'Connected' : 'Not connected'}</div>
-            <div>Chain id: {chainId}</div>
-            <div>User address: {address}</div>
-            <div style={{ textTransform: 'capitalize' }}>Network: {networkName}</div>
-          </div>
+          <Typography
+            color={theme.palette.primary.main}
+            marginBlock={2}
+            variant="h5"
+            component="p"
+            sx={{ display: { xs: 'block', sm: 'none' } }}
+          >
+            Balance: {bknAmount ? bknAmount + ' BKN' : 'N/A'}
+          </Typography>
+
+          <Container maxWidth="md">
+            <Grid container spacing={2} marginTop={1}>
+              <Grid item xs={12} sm={6}>
+                <AccountInformation
+                  projectedAmount={projectedAmount}
+                  depositedAmount={depositedAmount}
+                  isUserStaker={isUserStaker}
+                  withdrawableUserBalance={withdrawableUserBalance}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <StackingInformation roi={roi} roiSeconds={roiSeconds} />
+              </Grid>
+            </Grid>
+          </Container>
         </div>
       )}
     </div>

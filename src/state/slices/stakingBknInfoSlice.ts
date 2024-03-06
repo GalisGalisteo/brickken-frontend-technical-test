@@ -25,7 +25,11 @@ const initialState: InitialState = {
 const stakingBknInfoSlice = createSlice({
   name: 'stakingBknInfo',
   initialState,
-  reducers: {},
+  reducers: {
+    resetStakingBknInfo: (state) => {
+      Object.assign(state, initialState);
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchStakingBknInfoAsync.pending, (state) => {
@@ -56,6 +60,8 @@ const stakingBknInfoSlice = createSlice({
       });
   }
 });
+
+export const { resetStakingBknInfo } = stakingBknInfoSlice.actions;
 
 export const fetchStakingBknInfoAsync = createAsyncThunk(
   'stakingBknInfoSlice/fetchStakingBknInfoAsync',
