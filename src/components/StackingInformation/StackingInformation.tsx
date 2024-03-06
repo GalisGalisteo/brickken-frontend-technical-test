@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { gridContainer, gridItem, gridItemContainer } from '../../styles/styles';
-import { StakingInfo } from '../../models/StakingInfo';
 import { StakingInputSection } from '../StackingInputSection/StakingInputSection';
+import { StakingInfo } from '../../models/StakingInfo';
+import { gridContainer, gridItem, gridItemContainer } from '../../styles/styles';
 
 export const StackingInformation = ({ roi, roiSeconds, bknAmount, isDepositable }: StakingInfo) => {
   return (
