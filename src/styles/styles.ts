@@ -11,9 +11,14 @@ export const gridContainer = {
   backgroundColor: theme.palette.info.light,
   borderRadius: 12,
   color: theme.palette.primary.main,
-  p: 2
+  p: 3
 };
 
 export const gridItemContainer = { display: 'flex', justifyContent: 'center', alignItems: 'center' };
 
-export const gridItem = { color: 'white', backgroundColor: theme.palette.info.main, width: 150, borderRadius: 2 };
+export const gridItem = {
+  color: 'white',
+  backgroundColor: theme.palette.info.main,
+  width: 150,
+  borderRadius: 2
+};

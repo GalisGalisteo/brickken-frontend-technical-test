@@ -90,7 +90,12 @@ export const StakingInfoComponent = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <StackingInformation roi={roi} roiSeconds={roiSeconds} />
+                <StackingInformation
+                  roi={roi}
+                  roiSeconds={roiSeconds}
+                  bknAmount={bknAmount}
+                  isDepositable={isDepositable}
+                />
               </Grid>
             </Grid>
           </Container>

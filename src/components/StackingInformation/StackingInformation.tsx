@@ -1,13 +1,13 @@
 import React from 'react';
-import { Button, Container, Grid, Typography } from '@mui/material';
-import { gridContainer, gridItem, gridItemContainer, textButtons } from '../../styles/styles';
+import { Box, Grid, Typography } from '@mui/material';
+import { gridContainer, gridItem, gridItemContainer } from '../../styles/styles';
 import { StakingInfo } from '../../models/StakingInfo';
-import { theme } from '../../config/palette';
+import { StakingInputSection } from '../StackingInputSection/StakingInputSection';
 
-export const StackingInformation = ({ roi, roiSeconds }: StakingInfo) => {
+export const StackingInformation = ({ roi, roiSeconds, bknAmount, isDepositable }: StakingInfo) => {
   return (
     <div>
-      <Container sx={gridContainer}>
+      <Box sx={gridContainer}>
         <Typography variant="h5" component="h2" marginBottom={3}>
           Staking Information
         </Typography>
@@ -15,7 +15,7 @@ export const StackingInformation = ({ roi, roiSeconds }: StakingInfo) => {
           <Grid item xs={6}>
             Roi
           </Grid>
-          <Grid item xs={6} sx={gridItemContainer}>
+          <Grid pl={0} item xs={6} sx={gridItemContainer}>
             <Typography sx={gridItem}>{roi ? roi : 'N/A'}</Typography>
           </Grid>
           <Grid item xs={6}>
@@ -24,27 +24,11 @@ export const StackingInformation = ({ roi, roiSeconds }: StakingInfo) => {
           <Grid item xs={6} sx={gridItemContainer}>
             <Typography sx={gridItem}>{roiSeconds ? Number(roiSeconds).toFixed(9) : 'N/A'}</Typography>
           </Grid>
-          <Grid item xs={12} marginBottom={3}>
-            Enter amount
+          <Grid item xs={12} mt={1}>
+            <StakingInputSection bknAmount={bknAmount} isDepositable={isDepositable} />
           </Grid>
         </Grid>
-        <Button
-          size="large"
-          sx={[
-            {
-              backgroundColor: theme.palette.info.dark,
-              color: 'white',
-              borderRadius: '12px'
-            },
-            textButtons
-          ]}
-          variant="contained"
-          disableElevation
-          onClick={() => {}}
-        >
-          Deposit
-        </Button>
-      </Container>
+      </Box>
     </div>
   );
 };
