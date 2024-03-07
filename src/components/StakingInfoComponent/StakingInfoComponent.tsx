@@ -7,9 +7,9 @@ import { HeaderComponent } from '../HeaderComponent/HeaderComponent';
 import { AccountInformation } from '../AccountInformation/AccountInformation';
 import { StackingInformation } from '../StackingInformation/StackingInformation';
 import { AppDispatch, RootState } from '../../state/store/store';
-import { fetchStakingBknInfoAsync } from '../../state/slices/stakingBknInfoSlice';
-import { theme } from '../../config/palette';
-import { resetStakingBknInfo } from '../../state/slices/stakingBknInfoSlice';
+import { fetchStakingBknInfoAsync } from '../../state/stakingBknInfo/stakingBknInfoThunks';
+import { theme } from '../../styles/palette';
+import { resetStakingBknInfo } from '../../state/stakingBknInfo/stakingBknInfoSlice';
 
 export const StakingInfoComponent = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();

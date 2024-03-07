@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import stakingBknInfoReducer from '../slices/stakingBknInfoSlice';
+import rootReducer from './rootReducer';
 
 export const store = configureStore({
-  reducer: {
-    stakingBknInfo: stakingBknInfoReducer
-  }
+  reducer: rootReducer
 });
 
 export type RootState = ReturnType<typeof store.getState>;

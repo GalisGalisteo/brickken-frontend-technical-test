@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Grid, Input, InputLabel, Typography } from '@mui/material';
 import { gridItem, textButtons } from '../../styles/styles';
-import { theme } from '../../config/palette';
+import { theme } from '../../styles/palette';
 import { StakingInfo } from '../../models/StakingInfo';
 
 export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) => {
