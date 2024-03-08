@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, CircularProgress, Grid, Input, InputLabel, Typography } from '@mui/material';
+import { Alert, AlertTitle, Button, CircularProgress, Grid, Input, InputLabel, Typography } from '@mui/material';
 import { Web3Provider } from '@ethersproject/providers';
 import { gridItem, textButtons } from '../../styles/styles';
 import { theme } from '../../styles/palette';
@@ -30,7 +30,7 @@ export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) =
     if (txApprove && ethersProvider) {
       handleDeposit(ethersProvider, amount, txApprove);
     }
-  }, [stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove]);
+  }, [stakingDeposit.error, stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove]);
 
   useEffect(() => {
     const transactionReceiptStatus =
@@ -69,9 +69,10 @@ export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) =
       const stakingAmountNumber = Number(amount);
       const bknAmountNumber = Number(bknAmount);
       if (bknAmountNumber < stakingAmountNumber) {
-        setstakeAmountError(`Not enough balance (balance: ${bknAmount})`);
+        setstakeAmountError(`Not enough balance (${bknAmount} BKN)`);
+      } else if (stakingAmountNumber < 0) {
+        setstakeAmountError(`Enter a possitive number.`);
       } else {
-        // setAmount('');
         if (ethersProvider) {
           dispatch(fetchCreateAuthorizeStakingBknWithdrawal({ ethersProvider, amount }));
           setLoadingMessagge('Approving staking authorization...');
@@ -81,59 +82,53 @@ export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) =
   };
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <InputLabel sx={{ color: theme.palette.primary.main }} htmlFor="stakeAmount">
-          Amount to Stake
-        </InputLabel>
-        <Input
-          type="number"
-          id="stakeAmount"
-          placeholder="Enter amount"
-          value={amount}
-          disableUnderline
-          onChange={(e) => setAmount(e.target.value)}
-          sx={[gridItem, { padding: 1, width: '90%', textAlign: 'center' }]}
-          inputProps={{ style: { textAlign: 'center' } }}
-        />
-        <Typography color={theme.palette.error.main}>{stakeAmountError}</Typography>
+    <div>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <InputLabel sx={{ color: theme.palette.primary.main }} htmlFor="stakeAmount">
+            Amount to Stake
+          </InputLabel>
+          <Input
+            type="number"
+            id="stakeAmount"
+            placeholder="Enter amount"
+            value={amount}
+            disableUnderline
+            onChange={(e) => setAmount(e.target.value)}
+            sx={[gridItem, { padding: 1, width: '90%', textAlign: 'center' }]}
+            inputProps={{ style: { textAlign: 'center' } }}
+          />
+          <Typography color={theme.palette.error.main}>{stakeAmountError}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            disabled={!amount || !isDepositable || stakingDeposit.loading}
+            size="large"
+            sx={[
+              {
+                backgroundColor: theme.palette.info.dark,
+                color: 'white',
+                borderRadius: '12px'
+              },
+              textButtons
+            ]}
+            variant="contained"
+            disableElevation
+            onClick={handleSubmit}
+          >
+            Deposit
+            {stakingDeposit.loading && <CircularProgress size={25} sx={{ marginLeft: 1 }} />}
+          </Button>
+          {stakingDeposit.loading && <p>{loadingMessagge}</p>}
+        </Grid>
+        <Grid item xs={12}>
+          {stakingDeposit.error && !stakingDeposit.loading && (
+            <Alert severity="error">
+              <AlertTitle>Error:</AlertTitle> {stakingDeposit.error}
+            </Alert>
+          )}
+        </Grid>
       </Grid>
-      <Grid item xs={12} mb={1}>
-        <Button
-          disabled={!amount || !isDepositable || stakingDeposit.loading}
-          size="large"
-          sx={[
-            {
-              backgroundColor: theme.palette.info.dark,
-              color: 'white',
-              borderRadius: '12px'
-            },
-            textButtons
-          ]}
-          variant="contained"
-          disableElevation
-          onClick={handleSubmit}
-        >
-          Deposit
-        </Button>
-      </Grid>
-      <Grid item xs={12}>
-        {stakingDeposit.loading && <CircularProgress size={50} />}
-        {stakingDeposit.loading && <p>Loading message: {loadingMessagge}</p>}
-        {stakingDeposit.error && <p>Error message: {stakingDeposit.error}</p>}
-        <p>fetchWithdrawal:</p>
-        <p>{stakingDeposit.loading && 'loading'}</p>
-        <p>{stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove}</p>
-        <p>fetchResult:</p>
-        <p>{stakingDeposit.loading && 'loading'}</p>
-        <p>{stakingDeposit.fetchGetAuthorizeStakingBknWithdrawalResult.transactionReceiptStatus}</p>
-        <p>fetchStartDeposit:</p>
-        <p>{stakingDeposit.loading && 'loading'}</p>
-        <p>{stakingDeposit.fetchStartDeposit.depositHash}</p>
-        <p>fetchDepositResult:</p>
-        <p>{stakingDeposit.loading && 'loading'}</p>
-        <p>{stakingDeposit.fetchGetStartDepositResult.transactionReceiptStatus}</p>
-      </Grid>
-    </Grid>
+    </div>
   );
 };
