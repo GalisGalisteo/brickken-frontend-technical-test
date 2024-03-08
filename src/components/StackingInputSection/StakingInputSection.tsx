@@ -1,85 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Alert, AlertTitle, Button, CircularProgress, Grid, Input, InputLabel, Typography } from '@mui/material';
-import { Web3Provider } from '@ethersproject/providers';
 import { gridItem, textButtons } from '../../styles/styles';
 import { theme } from '../../styles/palette';
 import { StakingInfo } from '../../models/StakingInfo';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../state/store/store';
-import { useEthersProvider } from '../../hooks/useEthersProvider';
-import {
-  fetchCreateAuthorizeStakingBknWithdrawal,
-  fetchGetAuthorizeStakingBknWithdrawalResult,
-  fetchGetStartDepositResult,
-  fetchStartDeposit
-} from '../../state/stakingDeposit/stakingDepositThunks';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../state/store/store';
+import {} from '../../hooks/useEthersProvider';
+interface StakingInputSectionProps extends StakingInfo {
+  handleSubmit: (amount: string) => void;
+  stakeAmountError: string;
+  amount: string;
+  setAmount: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) => {
-  const [amount, setAmount] = useState<string>('');
-  const [stakeAmountError, setstakeAmountError] = useState<string | null>(null);
-  const [loadingMessagge, setLoadingMessagge] = useState<string>('');
-
-  const ethersProvider = useEthersProvider();
-  const dispatch = useDispatch<AppDispatch>();
-
+export const StakingInputSection = ({
+  isDepositable,
+  handleSubmit,
+  stakeAmountError,
+  amount,
+  setAmount
+}: StakingInputSectionProps) => {
   const stakingDeposit = useSelector((state: RootState) => state.stakingDeposit);
-
-  useEffect(() => {
-    const txApprove = stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove;
-
-    if (txApprove && ethersProvider) {
-      handleDeposit(ethersProvider, amount, txApprove);
-    }
-  }, [stakingDeposit.error, stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove]);
-
-  useEffect(() => {
-    const transactionReceiptStatus =
-      stakingDeposit.fetchGetAuthorizeStakingBknWithdrawalResult.transactionReceiptStatus;
-    if (ethersProvider && transactionReceiptStatus === 1) {
-      handleStartDeoposit(ethersProvider, amount);
-    }
-  }, [stakingDeposit.fetchGetAuthorizeStakingBknWithdrawalResult.transactionReceiptStatus]);
-
-  useEffect(() => {
-    const depositHash = stakingDeposit.fetchStartDeposit.depositHash;
-    if (ethersProvider && depositHash) {
-      handleDepositResult(ethersProvider, depositHash);
-    }
-  }, [stakingDeposit.fetchStartDeposit.depositHash]);
-
-  const handleDeposit = async (ethersProvider: Web3Provider, amount: string, txApprove: string) => {
-    setLoadingMessagge('Verifying staking authorization withdrawal...');
-    await dispatch(fetchGetAuthorizeStakingBknWithdrawalResult({ ethersProvider, txApprove }));
-  };
-
-  const handleStartDeoposit = async (ethersProvider: Web3Provider, amount: string) => {
-    setLoadingMessagge('Initiating deposit operation...');
-    await dispatch(fetchStartDeposit({ ethersProvider, amount }));
-  };
-
-  const handleDepositResult = async (ethersProvider: Web3Provider, depositHash: string) => {
-    setLoadingMessagge('Waiting for deposit transaction to complete...');
-    await dispatch(fetchGetStartDepositResult({ ethersProvider, depositHash }));
-    setAmount('');
-  };
-
-  const handleSubmit = () => {
-    setstakeAmountError('');
-    if (amount && bknAmount) {
-      const stakingAmountNumber = Number(amount);
-      const bknAmountNumber = Number(bknAmount);
-      if (bknAmountNumber < stakingAmountNumber) {
-        setstakeAmountError(`Not enough balance (${bknAmount} BKN)`);
-      } else if (stakingAmountNumber < 0) {
-        setstakeAmountError(`Enter a possitive number.`);
-      } else {
-        if (ethersProvider) {
-          dispatch(fetchCreateAuthorizeStakingBknWithdrawal({ ethersProvider, amount }));
-          setLoadingMessagge('Approving staking authorization...');
-        }
-      }
-    }
-  };
 
   return (
     <div>
@@ -102,7 +43,7 @@ export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) =
         </Grid>
         <Grid item xs={12}>
           <Button
-            disabled={!amount || !isDepositable || stakingDeposit.loading}
+            disabled={Number(amount) <= 0 || !isDepositable || stakingDeposit.loading.status}
             size="large"
             sx={[
               {
@@ -114,17 +55,22 @@ export const StakingInputSection = ({ bknAmount, isDepositable }: StakingInfo) =
             ]}
             variant="contained"
             disableElevation
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(amount)}
           >
             Deposit
-            {stakingDeposit.loading && <CircularProgress size={25} sx={{ marginLeft: 1 }} />}
+            {stakingDeposit.loading.status && <CircularProgress size={25} sx={{ marginLeft: 1 }} />}
           </Button>
-          {stakingDeposit.loading && <p>{loadingMessagge}</p>}
+          {stakingDeposit.loading.status && <p>{stakingDeposit.loading.message}</p>}
         </Grid>
         <Grid item xs={12}>
-          {stakingDeposit.error && !stakingDeposit.loading && (
+          {stakingDeposit.error && !stakingDeposit.loading.status && (
             <Alert severity="error">
               <AlertTitle>Error:</AlertTitle> {stakingDeposit.error}
+            </Alert>
+          )}
+          {stakingDeposit.fetchGetStartDepositResult.transactionReceiptStatus === 1 && (
+            <Alert severity="success">
+              <AlertTitle>STAKE WAS SUCCESFULL</AlertTitle>Deposit completed!
             </Alert>
           )}
         </Grid>

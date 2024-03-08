@@ -1,24 +1,7 @@
 import { fetchGetAuthorizeStakingBknWithdrawalResult } from '../../../state/stakingDeposit/stakingDepositThunks';
-import stakingDepositReducer from '../../../state/stakingDeposit/stakingDepositSlice';
+import stakingDepositReducer, { initialState } from '../../../state/stakingDeposit/stakingDepositSlice';
 
 describe('fetchGetAuthorizeStakingBknWithdrawalResult reducer', () => {
-  const initialState = {
-    fetchCreateAuthorizeStakingBknWithdrawal: {
-      txApprove: null
-    },
-    fetchGetAuthorizeStakingBknWithdrawalResult: {
-      transactionReceiptStatus: undefined
-    },
-    fetchStartDeposit: {
-      depositHash: ''
-    },
-    fetchGetStartDepositResult: {
-      transactionReceiptStatus: undefined
-    },
-    loading: false,
-    error: ''
-  };
-
   test('fulfilled action updates state correctly', () => {
     const action = {
       type: fetchGetAuthorizeStakingBknWithdrawalResult.fulfilled.type,
@@ -49,6 +32,6 @@ describe('fetchGetAuthorizeStakingBknWithdrawalResult reducer', () => {
     };
 
     const newState = stakingDepositReducer(initialState, action);
-    expect(newState.loading).toEqual(true);
+    expect(newState.loading.status).toEqual(true);
   });
 });

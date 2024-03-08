@@ -1,16 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Web3Provider } from '@ethersproject/providers';
 import {
   createAuthorizeStakingBknWithdrawal,
   getAuthorizeStakingBknWithdrawalResult,
   getStartDepositResult,
   startDeposit
 } from '../../services/stakingWeb3Service';
-
-export interface CreateAuthorizeStakingBknWithdrawalThunk {
-  ethersProvider: Web3Provider;
-  amount: string;
-}
+import {
+  CreateAuthorizeStakingBknWithdrawalThunk,
+  GetAuthorizeStakingBknWithdrawalResultThunk,
+  GetStartDepositResultThunk,
+  StakingDepositAmountThunk
+} from './stakingDepositInterfaces';
 
 export const fetchCreateAuthorizeStakingBknWithdrawal = createAsyncThunk(
   'stakingDepositSlice/fetchCreateAuthorizeStakingBknWithdrawal',
@@ -20,11 +20,6 @@ export const fetchCreateAuthorizeStakingBknWithdrawal = createAsyncThunk(
   }
 );
 
-interface GetAuthorizeStakingBknWithdrawalResultThunk {
-  ethersProvider: Web3Provider;
-  txApprove: string;
-}
-
 export const fetchGetAuthorizeStakingBknWithdrawalResult = createAsyncThunk(
   'stakingDepositSlice/fetchGetAuthorizeStakingBknWithdrawalResult',
   async ({ ethersProvider, txApprove }: GetAuthorizeStakingBknWithdrawalResultThunk) => {
@@ -33,23 +28,13 @@ export const fetchGetAuthorizeStakingBknWithdrawalResult = createAsyncThunk(
   }
 );
 
-interface StakingDepositThunkAmount {
-  ethersProvider: Web3Provider;
-  amount: string;
-}
-
 export const fetchStartDeposit = createAsyncThunk(
   'stakingDepositSlice/fetchStartDeposit',
-  async ({ ethersProvider, amount }: StakingDepositThunkAmount) => {
+  async ({ ethersProvider, amount }: StakingDepositAmountThunk) => {
     const depositHash = await startDeposit(ethersProvider, amount);
     return { depositHash };
   }
 );
-
-interface GetStartDepositResultThunk {
-  ethersProvider: Web3Provider;
-  depositHash: string;
-}
 
 export const fetchGetStartDepositResult = createAsyncThunk(
   'stakingDepositSlice/fetchGetStartDepositResult',

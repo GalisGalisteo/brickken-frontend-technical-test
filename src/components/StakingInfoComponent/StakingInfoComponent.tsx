@@ -5,33 +5,26 @@ import { useEthersProvider } from '../../hooks/useEthersProvider';
 import { Box, CircularProgress, Container, Grid, Typography } from '@mui/material';
 import { HeaderComponent } from '../HeaderComponent/HeaderComponent';
 import { AccountInformation } from '../AccountInformation/AccountInformation';
-import { StackingInformation } from '../StackingInformation/StackingInformation';
+import { StackingInformation } from '../StackingInformation/StakingInformation';
 import { AppDispatch, RootState } from '../../state/store/store';
 import { fetchStakingBknInfoAsync } from '../../state/stakingBknInfo/stakingBknInfoThunks';
 import { theme } from '../../styles/palette';
 import { resetStakingBknInfo } from '../../state/stakingBknInfo/stakingBknInfoSlice';
+import {
+  handleAuthorizeStakingWithdrawal,
+  handleCreateAuthorizeStakingBknWithdrawal,
+  handleDepositResult,
+  handleStartDeposit
+} from '../../services/stakingService';
 
 export const StakingInfoComponent = () => {
   const { address, chainId, isConnected } = useWeb3ModalAccount();
-
   const [networkName, setNetworkName] = useState<string | null>(null);
+  const [stakeAmountError, setstakeAmountError] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+
   const ethersProvider = useEthersProvider();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (ethersProvider && address) {
-        await dispatch(fetchStakingBknInfoAsync(ethersProvider));
-        const network = ethersProvider?.network;
-        network && setNetworkName(network.name);
-      } else {
-        dispatch(resetStakingBknInfo());
-        setNetworkName(null);
-      }
-    };
-
-    fetchData();
-  }, [address, ethersProvider, dispatch]);
 
   const {
     loading,
@@ -47,7 +40,65 @@ export const StakingInfoComponent = () => {
     withdrawableUserBalance
   } = useSelector((state: RootState) => state.stakingBknInfo);
 
-  console.log(chainId, isConnected, isClaimable);
+  const stakingDeposit = useSelector((state: RootState) => state.stakingDeposit);
+  const txApprove = stakingDeposit.fetchCreateAuthorizeStakingBknWithdrawal.txApprove;
+  const transactionReceiptWithdrawalStatus =
+    stakingDeposit.fetchGetAuthorizeStakingBknWithdrawalResult.transactionReceiptStatus;
+  const depositHash = stakingDeposit.fetchStartDeposit.depositHash;
+  const transactionReceiptDepositStatus = stakingDeposit.fetchGetStartDepositResult.transactionReceiptStatus;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (ethersProvider && address) {
+        await dispatch(fetchStakingBknInfoAsync(ethersProvider));
+        const network = ethersProvider?.network;
+        network && setNetworkName(network.name);
+      } else {
+        dispatch(resetStakingBknInfo());
+        setNetworkName(null);
+      }
+    };
+
+    fetchData();
+  }, [isConnected, address, ethersProvider, dispatch, transactionReceiptDepositStatus]);
+
+  useEffect(() => {
+    if (txApprove && ethersProvider) {
+      handleAuthorizeStakingWithdrawal(dispatch, ethersProvider, txApprove);
+    }
+  }, [txApprove]);
+
+  useEffect(() => {
+    if (ethersProvider && transactionReceiptWithdrawalStatus === 1) {
+      handleStartDeposit(dispatch, ethersProvider, amount);
+    }
+  }, [transactionReceiptWithdrawalStatus]);
+
+  useEffect(() => {
+    if (ethersProvider && depositHash) {
+      handleDepositResult(dispatch, ethersProvider, depositHash);
+      setAmount('');
+    }
+  }, [depositHash]);
+
+  const handleSubmit = () => {
+    setstakeAmountError('');
+    if (amount && bknAmount) {
+      const stakingAmountNumber = Number(amount);
+      const bknAmountNumber = Number(bknAmount);
+      if (bknAmountNumber < stakingAmountNumber) {
+        setstakeAmountError(`Not enough balance (${bknAmount} BKN)`);
+      } else if (stakingAmountNumber <= 0) {
+        setstakeAmountError(`Enter a valid amount (1 or more).`);
+      } else {
+        if (ethersProvider) {
+          handleCreateAuthorizeStakingBknWithdrawal(dispatch, ethersProvider, amount);
+        }
+      }
+    }
+  };
+
+  console.log(chainId, isClaimable);
 
   return (
     <div>
@@ -95,6 +146,10 @@ export const StakingInfoComponent = () => {
                   roiSeconds={roiSeconds}
                   bknAmount={bknAmount}
                   isDepositable={isDepositable}
+                  handleSubmit={handleSubmit}
+                  stakeAmountError={stakeAmountError}
+                  amount={amount}
+                  setAmount={setAmount}
                 />
               </Grid>
             </Grid>
