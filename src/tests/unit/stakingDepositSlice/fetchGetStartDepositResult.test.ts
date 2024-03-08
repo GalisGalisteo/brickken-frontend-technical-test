@@ -4,56 +4,43 @@ import stakingDepositReducer from '../../../state/stakingDeposit/stakingDepositS
 describe('fetchGetStartDepositResult reducer', () => {
   const initialState = {
     fetchCreateAuthorizeStakingBknWithdrawal: {
-      loading: false,
-      error: '',
       txApprove: null
     },
     fetchGetAuthorizeStakingBknWithdrawalResult: {
-      loading: false,
-      error: '',
       transactionReceiptStatus: undefined
     },
     fetchStartDeposit: {
-      loading: false,
-      error: '',
       depositHash: ''
     },
     fetchGetStartDepositResult: {
-      loading: false,
-      error: '',
       transactionReceiptStatus: undefined
-    }
+    },
+    loading: false,
+    error: ''
   };
 
   test('fulfilled action updates state correctly', () => {
     const action = {
       type: fetchGetStartDepositResult.fulfilled.type,
       payload: {
-        transactionReceiptStatus: '0x123456789012345678901234',
-        error: '',
-        loading: false
+        transactionReceiptStatus: '0x123456789012345678901234'
       }
     };
 
     const newState = stakingDepositReducer(initialState, action);
     expect(newState.fetchGetStartDepositResult).toEqual({
-      transactionReceiptStatus: '0x123456789012345678901234',
-      error: '',
-      loading: false
+      transactionReceiptStatus: '0x123456789012345678901234'
     });
   });
 
   test('rejected action updates state correctly', () => {
     const action = {
       type: fetchGetStartDepositResult.rejected.type,
-      error: { message: 'Error creating authorization withdrawal to stake BKN' }
+      error: { message: 'Error getting start deposit result' }
     };
 
     const newState = stakingDepositReducer(initialState, action);
-    expect(newState.fetchGetStartDepositResult).toEqual({
-      ...initialState.fetchGetStartDepositResult,
-      error: action.error.message
-    });
+    expect(newState.error).toEqual(action.error.message);
   });
 
   test('pending action updates state correctly', () => {
@@ -62,9 +49,6 @@ describe('fetchGetStartDepositResult reducer', () => {
     };
 
     const newState = stakingDepositReducer(initialState, action);
-    expect(newState.fetchGetStartDepositResult).toEqual({
-      ...initialState.fetchGetStartDepositResult,
-      loading: true
-    });
+    expect(newState.loading).toEqual(true);
   });
 });

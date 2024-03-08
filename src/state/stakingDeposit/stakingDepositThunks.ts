@@ -7,40 +7,54 @@ import {
   startDeposit
 } from '../../services/stakingWeb3Service';
 
-interface StakingDepositAction {
+export interface CreateAuthorizeStakingBknWithdrawalThunk {
   ethersProvider: Web3Provider;
   amount: string;
-  txHash: string;
 }
 
 export const fetchCreateAuthorizeStakingBknWithdrawal = createAsyncThunk(
   'stakingDepositSlice/fetchCreateAuthorizeStakingBknWithdrawal',
-  async ({ ethersProvider, amount }: StakingDepositAction) => {
+  async ({ ethersProvider, amount }: CreateAuthorizeStakingBknWithdrawalThunk) => {
     const txApprove = await createAuthorizeStakingBknWithdrawal(ethersProvider, amount);
     return { txApprove };
   }
 );
 
+interface GetAuthorizeStakingBknWithdrawalResultThunk {
+  ethersProvider: Web3Provider;
+  txApprove: string;
+}
+
 export const fetchGetAuthorizeStakingBknWithdrawalResult = createAsyncThunk(
   'stakingDepositSlice/fetchGetAuthorizeStakingBknWithdrawalResult',
-  async ({ ethersProvider, txHash }: StakingDepositAction) => {
-    const transactionReceiptStatus = await getAuthorizeStakingBknWithdrawalResult(ethersProvider, txHash);
+  async ({ ethersProvider, txApprove }: GetAuthorizeStakingBknWithdrawalResultThunk) => {
+    const transactionReceiptStatus = await getAuthorizeStakingBknWithdrawalResult(ethersProvider, txApprove);
     return { transactionReceiptStatus };
   }
 );
 
+interface StakingDepositThunkAmount {
+  ethersProvider: Web3Provider;
+  amount: string;
+}
+
 export const fetchStartDeposit = createAsyncThunk(
   'stakingDepositSlice/fetchStartDeposit',
-  async ({ ethersProvider, amount }: StakingDepositAction) => {
+  async ({ ethersProvider, amount }: StakingDepositThunkAmount) => {
     const depositHash = await startDeposit(ethersProvider, amount);
     return { depositHash };
   }
 );
 
+interface GetStartDepositResultThunk {
+  ethersProvider: Web3Provider;
+  depositHash: string;
+}
+
 export const fetchGetStartDepositResult = createAsyncThunk(
   'stakingDepositSlice/fetchGetStartDepositResult',
-  async ({ ethersProvider, txHash }: StakingDepositAction) => {
-    const transactionReceiptStatus = await getStartDepositResult(ethersProvider, txHash);
+  async ({ ethersProvider, depositHash }: GetStartDepositResultThunk) => {
+    const transactionReceiptStatus = await getStartDepositResult(ethersProvider, depositHash);
     return { transactionReceiptStatus };
   }
 );

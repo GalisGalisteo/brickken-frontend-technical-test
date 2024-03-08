@@ -4,56 +4,43 @@ import stakingDepositReducer from '../../../state/stakingDeposit/stakingDepositS
 describe('fetchGetAuthorizeStakingBknWithdrawalResult reducer', () => {
   const initialState = {
     fetchCreateAuthorizeStakingBknWithdrawal: {
-      loading: false,
-      error: '',
       txApprove: null
     },
     fetchGetAuthorizeStakingBknWithdrawalResult: {
-      loading: false,
-      error: '',
       transactionReceiptStatus: undefined
     },
     fetchStartDeposit: {
-      loading: false,
-      error: '',
       depositHash: ''
     },
     fetchGetStartDepositResult: {
-      loading: false,
-      error: '',
       transactionReceiptStatus: undefined
-    }
+    },
+    loading: false,
+    error: ''
   };
 
   test('fulfilled action updates state correctly', () => {
     const action = {
       type: fetchGetAuthorizeStakingBknWithdrawalResult.fulfilled.type,
       payload: {
-        transactionReceiptStatus: 1,
-        error: '',
-        loading: false
+        transactionReceiptStatus: 1
       }
     };
 
     const newState = stakingDepositReducer(initialState, action);
     expect(newState.fetchGetAuthorizeStakingBknWithdrawalResult).toEqual({
-      transactionReceiptStatus: 1,
-      error: '',
-      loading: false
+      transactionReceiptStatus: 1
     });
   });
 
   test('rejected action updates state correctly', () => {
     const action = {
       type: fetchGetAuthorizeStakingBknWithdrawalResult.rejected.type,
-      error: { message: 'Error creating authorization withdrawal to stake BKN' }
+      error: { message: 'Error getting authorization withdrawal result' }
     };
 
     const newState = stakingDepositReducer(initialState, action);
-    expect(newState.fetchGetAuthorizeStakingBknWithdrawalResult).toEqual({
-      ...initialState.fetchGetAuthorizeStakingBknWithdrawalResult,
-      error: action.error.message
-    });
+    expect(newState.error).toEqual(action.error.message);
   });
 
   test('pending action updates state correctly', () => {
@@ -62,9 +49,6 @@ describe('fetchGetAuthorizeStakingBknWithdrawalResult reducer', () => {
     };
 
     const newState = stakingDepositReducer(initialState, action);
-    expect(newState.fetchGetAuthorizeStakingBknWithdrawalResult).toEqual({
-      ...initialState.fetchGetAuthorizeStakingBknWithdrawalResult,
-      loading: true
-    });
+    expect(newState.loading).toEqual(true);
   });
 });
