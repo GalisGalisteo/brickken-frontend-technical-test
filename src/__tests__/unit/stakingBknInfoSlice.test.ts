@@ -1,15 +1,15 @@
 import { Action, Store, configureStore } from '@reduxjs/toolkit';
-import stakingBknInfoReducer, { fetchStakingBknInfoAsync } from '../../state/slices/stakingBknInfoSlice';
+import stakingBknInfoReducer from '../../state/stakingBknInfo/stakingBknInfoSlice';
+import { fetchStakingBknInfoAsync } from '../../state/stakingBknInfo/stakingBknInfoThunks';
 import { RootState } from '../../state/store/store';
+import rootReducer from '../../state/store/rootReducer';
 
 describe('Redux Store', () => {
   let store: Store<RootState, Action>;
 
   beforeEach(() => {
     store = configureStore({
-      reducer: {
-        stakingBknInfo: stakingBknInfoReducer
-      }
+      reducer: rootReducer
     });
   });
 

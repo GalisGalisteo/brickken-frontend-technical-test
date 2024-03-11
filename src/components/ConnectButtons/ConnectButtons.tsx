@@ -2,7 +2,7 @@ import React from 'react';
 import { useWeb3Modal } from '@web3modal/ethers5/react';
 import { Button, Container, Typography } from '@mui/material';
 import { shortenAddress } from '../../services/service';
-import { theme } from '../../config/palette';
+import { theme } from '../../styles/palette';
 import { textButtons } from '../../styles/styles';
 export interface ConnectButtonsProps {
   network: string | null;

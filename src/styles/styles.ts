@@ -1,4 +1,4 @@
-import { theme } from '../config/palette';
+import { theme } from './palette';
 
 export const textButtons = {
   textTransform: 'capitalize',

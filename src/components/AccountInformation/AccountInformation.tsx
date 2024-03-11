@@ -20,13 +20,13 @@ export const AccountInformation = ({
             Projected Amount
           </Grid>
           <Grid item xs={12} sx={gridItemContainer}>
-            <Typography sx={gridItem}>{projectedAmount ? projectedAmount : 'N/A'}</Typography>
+            <Typography sx={gridItem}>{projectedAmount ? Number(projectedAmount).toFixed(4) : 'N/A'}</Typography>
           </Grid>
           <Grid item xs={12}>
             Deposited Amount:
           </Grid>
           <Grid item xs={12} sx={gridItemContainer}>
-            <Typography sx={gridItem}>{depositedAmount ? depositedAmount : 'N/A'}</Typography>
+            <Typography sx={gridItem}>{depositedAmount ? Number(depositedAmount).toFixed(4) : 'N/A'}</Typography>
           </Grid>
           <Grid item xs={12}>
             Staker
@@ -38,7 +38,9 @@ export const AccountInformation = ({
             Withdrawable
           </Grid>
           <Grid item xs={12} sx={gridItemContainer}>
-            <Typography sx={gridItem}>{withdrawableUserBalance ? withdrawableUserBalance : 'N/A'}</Typography>
+            <Typography sx={gridItem}>
+              {withdrawableUserBalance ? Number(withdrawableUserBalance).toFixed(4) : 'N/A'}
+            </Typography>
           </Grid>
         </Grid>
       </Container>

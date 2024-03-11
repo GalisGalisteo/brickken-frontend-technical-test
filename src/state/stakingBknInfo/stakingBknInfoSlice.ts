@@ -1,8 +1,6 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { StakingInfo } from '../../models/StakingInfo';
-import { Web3Provider } from '@ethersproject/providers';
-import { fetchStakingBknInfo } from '../../services/stakingWeb3Service';
-
+import { fetchStakingBknInfoAsync } from './stakingBknInfoThunks';
 interface InitialState extends StakingInfo {
   error?: string;
   loading?: boolean;
@@ -33,8 +31,8 @@ const stakingBknInfoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchStakingBknInfoAsync.pending, (state) => {
-        console.log('fetchStakingBknInfoAsync.pending');
         state.loading = true;
+        state.error = '';
       })
       .addCase(fetchStakingBknInfoAsync.rejected, (state, action) => {
         state.loading = false;
@@ -45,7 +43,6 @@ const stakingBknInfoSlice = createSlice({
         }
       })
       .addCase(fetchStakingBknInfoAsync.fulfilled, (state, action: PayloadAction<StakingInfo>) => {
-        console.log('fetchStakingBknInfoAsync.fullfield');
         state.loading = false;
         state.error = '';
         state.projectedAmount = action.payload.projectedAmount;
@@ -62,10 +59,5 @@ const stakingBknInfoSlice = createSlice({
 });
 
 export const { resetStakingBknInfo } = stakingBknInfoSlice.actions;
-
-export const fetchStakingBknInfoAsync = createAsyncThunk(
-  'stakingBknInfoSlice/fetchStakingBknInfoAsync',
-  async (ethersProvider: Web3Provider) => await fetchStakingBknInfo(ethersProvider)
-);
 
 export default stakingBknInfoSlice.reducer;

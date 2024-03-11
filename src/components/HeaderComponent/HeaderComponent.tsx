@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Box, Button, Toolbar } from '@mui/material';
 import { ConnectButtons, ConnectButtonsProps } from '../ConnectButtons/ConnectButtons';
-import { theme } from '../../config/palette';
+import { theme } from '../../styles/palette';
 
 import brickken from '../../assets/img/brickken.png';
 

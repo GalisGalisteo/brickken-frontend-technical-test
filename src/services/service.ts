@@ -7,3 +7,22 @@ export const shortenAddress = (address: `0x${string}` | undefined, startLength =
 
   return `${prefix}...${suffix}`;
 };
+
+export const getNetworkName = (chainId: number | undefined) => {
+  switch (chainId) {
+    case 1:
+      return 'Ethereum Mainnet';
+    case 3:
+      return 'Ropsten Testnet';
+    case 4:
+      return 'Rinkeby Testnet';
+    case 5:
+      return 'Goerli Testnet';
+    case 42:
+      return 'Kovan Testnet';
+    case 11155111:
+      return 'Sepolia';
+    default:
+      return null;
+  }
+};

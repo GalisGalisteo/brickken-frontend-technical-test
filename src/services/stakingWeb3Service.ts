@@ -90,6 +90,7 @@ export const startDeposit = async (ethersProvider: Web3Provider, amount: string)
   const deposit = await stakingContract.deposit(address, amountBigNumber);
   return deposit.hash;
 };
+
 export const getStartDepositResult = async (
   ethersProvider: Web3Provider,
   txHash: string
