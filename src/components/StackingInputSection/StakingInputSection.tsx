@@ -1,24 +1,24 @@
 import React from 'react';
-import { Alert, AlertTitle, Button, CircularProgress, Grid, Input, InputLabel, Typography } from '@mui/material';
-import { gridItem, textButtons } from '../../styles/styles';
-import { theme } from '../../styles/palette';
-import { StakingInfo } from '../../models/StakingInfo';
 import { useSelector } from 'react-redux';
+import { Button, CircularProgress, Grid, Input, InputLabel, Typography } from '@mui/material';
+import { StakingInfo } from '../../models/StakingInfo';
 import { RootState } from '../../state/store/store';
-import {} from '../../hooks/useEthersProvider';
+import { theme } from '../../styles/palette';
+import { gridItem, textButtons } from '../../styles/styles';
+
 interface StakingInputSectionProps extends StakingInfo {
-  handleSubmit: (amount: string) => void;
+  handleSubmit: (inputAmount: string) => void;
   stakeAmountError: string;
-  amount: string;
-  setAmount: React.Dispatch<React.SetStateAction<string>>;
+  inputAmount: string;
+  setInputAmount: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const StakingInputSection = ({
   isDepositable,
   handleSubmit,
   stakeAmountError,
-  amount,
-  setAmount
+  inputAmount,
+  setInputAmount
 }: StakingInputSectionProps) => {
   const stakingDeposit = useSelector((state: RootState) => state.stakingDeposit);
 
@@ -33,9 +33,9 @@ export const StakingInputSection = ({
             type="number"
             id="stakeAmount"
             placeholder="Enter amount"
-            value={amount}
+            value={inputAmount}
             disableUnderline
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => setInputAmount(e.target.value)}
             sx={[gridItem, { padding: 1, width: '90%', textAlign: 'center' }]}
             inputProps={{ style: { textAlign: 'center' } }}
           />
@@ -43,37 +43,18 @@ export const StakingInputSection = ({
         </Grid>
         <Grid item xs={12}>
           <Button
-            disabled={Number(amount) <= 0 || !isDepositable || stakingDeposit.loading.status}
+            disabled={Number(inputAmount) <= 0 || !isDepositable || stakingDeposit.loading.status}
             size="large"
-            sx={[
-              {
-                backgroundColor: theme.palette.info.dark,
-                color: 'white',
-                borderRadius: '12px'
-              },
-              textButtons
-            ]}
+            sx={[{ backgroundColor: theme.palette.info.dark, color: 'white', borderRadius: '12px' }, textButtons]}
             variant="contained"
             disableElevation
-            onClick={() => handleSubmit(amount)}
+            onClick={() => handleSubmit(inputAmount)}
           >
             Deposit
             {stakingDeposit.loading.status && <CircularProgress size={25} sx={{ marginLeft: 1 }} />}
           </Button>
-          {stakingDeposit.loading.status && <p>{stakingDeposit.loading.message}</p>}
         </Grid>
-        <Grid item xs={12}>
-          {stakingDeposit.error && !stakingDeposit.loading.status && (
-            <Alert severity="error">
-              <AlertTitle>Error:</AlertTitle> {stakingDeposit.error}
-            </Alert>
-          )}
-          {stakingDeposit.fetchGetStartDepositResult.transactionReceiptStatus === 1 && (
-            <Alert severity="success">
-              <AlertTitle>STAKE WAS SUCCESFULL</AlertTitle>Deposit completed!
-            </Alert>
-          )}
-        </Grid>
+        <Grid item xs={12}></Grid>
       </Grid>
     </div>
   );

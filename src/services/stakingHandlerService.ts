@@ -1,12 +1,17 @@
+import { Web3Provider } from '@ethersproject/providers';
 import {
   fetchCreateAuthorizeStakingBknWithdrawal,
   fetchGetAuthorizeStakingBknWithdrawalResult,
   fetchGetStartDepositResult,
   fetchStartDeposit
 } from '../state/stakingDeposit/stakingDepositThunks';
-import { Web3Provider } from '@ethersproject/providers';
 import { AppDispatch } from '../state/store/store';
 import { setLoadingMessage } from '../state/stakingDeposit/stakingDepositSlice';
+import { fetchStakingBknInfoAsync } from '../state/stakingBknInfo/stakingBknInfoThunks';
+
+export const fetchStakingData = async (dispatch: AppDispatch, ethersProvider: Web3Provider) => {
+  await dispatch(fetchStakingBknInfoAsync(ethersProvider));
+};
 
 export const handleCreateAuthorizeStakingBknWithdrawal = async (
   dispatch: AppDispatch,

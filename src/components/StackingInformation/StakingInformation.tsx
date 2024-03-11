@@ -7,8 +7,8 @@ import { gridContainer, gridItem, gridItemContainer } from '../../styles/styles'
 interface StakingInformationProps extends StakingInfo {
   handleSubmit: () => void;
   stakeAmountError: string;
-  amount: string;
-  setAmount: React.Dispatch<React.SetStateAction<string>>;
+  inputAmount: string;
+  setInputAmount: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const StackingInformation = ({
@@ -18,8 +18,8 @@ export const StackingInformation = ({
   isDepositable,
   handleSubmit,
   stakeAmountError,
-  amount,
-  setAmount
+  inputAmount,
+  setInputAmount
 }: StakingInformationProps) => {
   return (
     <div>
@@ -46,8 +46,8 @@ export const StackingInformation = ({
               isDepositable={isDepositable}
               handleSubmit={handleSubmit}
               stakeAmountError={stakeAmountError}
-              amount={amount}
-              setAmount={setAmount}
+              inputAmount={inputAmount}
+              setInputAmount={setInputAmount}
             />
           </Grid>
         </Grid>

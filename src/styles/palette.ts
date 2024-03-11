@@ -19,12 +19,12 @@ export const theme = createTheme({
     },
     error: {
       main: '#f44336',
-      light: '#66bb6a',
-      dark: '#388e3c'
+      light: '#e57373',
+      dark: '#d32f2f'
     },
     success: {
       main: '#66bb6a',
-      light: '#81c784',
+      light: '#b9ebbc',
       dark: '#388e3c'
     }
   }

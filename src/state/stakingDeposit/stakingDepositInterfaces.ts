@@ -3,18 +3,16 @@ import { Web3Provider } from '@ethersproject/providers';
 export interface FetchCreateAuthorizeStakingBknWithdrawal {
   txApprove: string | null;
 }
-
 export interface FetchGetAuthorizeStakingBknWithdrawalResult {
   transactionReceiptStatus: number | undefined;
 }
-
 export interface FetchStartDeposit {
   depositHash: string;
 }
-
 export interface FetchGetStartDepositResult {
   transactionReceiptStatus: number | undefined;
 }
+
 export interface InitialState {
   fetchCreateAuthorizeStakingBknWithdrawal: FetchCreateAuthorizeStakingBknWithdrawal;
   fetchGetAuthorizeStakingBknWithdrawalResult: FetchGetAuthorizeStakingBknWithdrawalResult;
@@ -39,7 +37,6 @@ export interface StakingDepositAmountThunk {
   ethersProvider: Web3Provider;
   amount: string;
 }
-
 export interface GetStartDepositResultThunk {
   ethersProvider: Web3Provider;
   depositHash: string;

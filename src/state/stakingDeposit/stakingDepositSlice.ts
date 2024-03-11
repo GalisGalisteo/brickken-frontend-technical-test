@@ -39,6 +39,9 @@ const stakingDepositSlice = createSlice({
   reducers: {
     setLoadingMessage: (state, action: PayloadAction<string>) => {
       state.loading.message = action.payload;
+    },
+    resetStakingDeposit: (state) => {
+      Object.assign(state, initialState);
     }
   },
   extraReducers: (builder) => {
@@ -100,5 +103,6 @@ const stakingDepositSlice = createSlice({
 });
 
 export const { setLoadingMessage } = stakingDepositSlice.actions;
+export const { resetStakingDeposit } = stakingDepositSlice.actions;
 
 export default stakingDepositSlice.reducer;
